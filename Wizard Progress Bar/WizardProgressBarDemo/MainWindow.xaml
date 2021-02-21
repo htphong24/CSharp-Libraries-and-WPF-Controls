@@ -1,8 +1,9 @@
 ﻿<Window x:Class="WizardProgressBarDemo.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525"
+        Title="MainWindow" Height="550" Width="425"
         xmlns:controls="clr-namespace:WizardProgressBarLibrary;assembly=WizardProgressBarLibrary"
+        FontSize="16"
         >
     
     <Grid>

@@ -7,140 +7,104 @@
     <converters:IsLastItemConverter x:Key="IsLastItemConverter"/>
     <converters:IsProgressedConverter x:Key="IsProgressedConverter"/>
 
-    <LinearGradientBrush x:Key="wizardBarBrush" StartPoint="0.5,0.0" EndPoint="0.5,1.0">
-        <GradientStop Color="#FFE4E4E4" Offset="0.25"/>
-        <GradientStop Color="#FFededed" Offset="0.50"/>
-        <GradientStop Color="#FFFCFCFC" Offset="0.75"/>
-    </LinearGradientBrush>
-    
     <Style TargetType="{x:Type local:WizardProgressBar}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:WizardProgressBar}">
-                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                    <Border Height="500" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
                         <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <ItemsControl ItemsSource="{TemplateBinding ItemsSource}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <UniformGrid Rows="1">
-                                            <UniformGrid.Effect>
-                                                <DropShadowEffect Color="Black"
-                                                                  BlurRadius="3"
-                                                                  Opacity="0.6"
-                                                                  ShadowDepth="0"/>
-                                            </UniformGrid.Effect>
-                                        </UniformGrid>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Steps Node -->
+                            <ItemsControl ItemsSource="{TemplateBinding ItemsSource}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Width="26">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <DataTemplate.Resources>
-                                            <Style TargetType="Path" x:Key="outerPath">
-                                                <Setter Property="Data" Value="M0.0,0.0 L0.0,0.33 L1.0,0.33 L1.0,0.66 L0.0,0.66 L0.0,1.0"/>
+                                            <Style TargetType="Path" x:Key="OuterPath">
+                                                <Setter Property="Data" Value="M0.0,0.0 L0.45,0.0 L0.45,1.0 L0.55,1.0 L0.55,0.0 L1.0,0.0"/>
                                                 <Setter Property="StrokeThickness" Value="0"/>
-                                                <Setter Property="Height" Value="21"/>
+                                                <Setter Property="Width" Value="21"/>
                                                 <Setter Property="Stretch" Value="Fill"/>
-                                                <Setter Property="Fill" Value="{StaticResource wizardBarBrush}"/>
+                                                <Setter Property="Fill" Value="#949494"/>
                                                 <Setter Property="StrokeEndLineCap" Value="Square"/>
                                                 <Setter Property="StrokeStartLineCap" Value="Square"/>
-                                                <Setter Property="Stroke" Value="Transparent"/>
+                                                <Setter Property="Stroke" Value="#FF086398"/>
                                             </Style>
-                                            <Style TargetType="Path" x:Key="innerPath" BasedOn="{StaticResource outerPath}">
-                                                <Setter Property="Data" Value="M0.0,0.0 L0.0,0.45 L1.0,0.45 L1.0,0.55 L0.0,0.55 L0.0,1.0"/>
-                                                <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:WizardProgressBar}},
-                                                                                        Path=Foreground}"/>
+                                            <Style TargetType="Path" x:Key="InnerPath" BasedOn="{StaticResource OuterPath}">
+                                                <Setter Property="Data" Value="M0.0,0.0 L0.45,0.0 L0.45,1.0 L0.55,1.0 L0.55,0.0 L1.0,0.0"/>
+                                                <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:WizardProgressBar}}, Path=Foreground}"/>
                                             </Style>
                                         </DataTemplate.Resources>
+
+                                        <!-- Steps and Progress Node -->
                                         <Grid SnapsToDevicePixels="True">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="26"/>
+                                                <RowDefinition Height="26"/>
                                             </Grid.RowDefinitions>
-                                            <Grid >
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition/>
-                                                    <ColumnDefinition/>
-                                                </Grid.ColumnDefinitions>
-                                                <Path Name="leftPath"
-                                                      Style="{StaticResource outerPath}"/>
-                                                <Path Grid.Column="1"
-                                                      Name="rightPath"
-                                                      Style="{StaticResource outerPath}"/>
-                                                <Ellipse Grid.ColumnSpan="2"
-                                                         HorizontalAlignment="Center"
-                                                         Stroke="Transparent"
-                                                         Height="20"
-                                                         Width="20"
-                                                         Fill="{StaticResource wizardBarBrush}"/>
-                                                <Ellipse Grid.ColumnSpan="2"
-                                                         HorizontalAlignment="Center"
-                                                         Stroke="Transparent"
-                                                         Height="14"
-                                                         Width="14"
-                                                         Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:WizardProgressBar}},
-                                                    Path=Foreground}">
-                                                    <Ellipse.Visibility>
-                                                        <MultiBinding Converter="{StaticResource IsProgressedConverter}"
-                                                                      ConverterParameter="False">
-                                                            <Binding RelativeSource="{RelativeSource TemplatedParent}"/>
-                                                            <Binding RelativeSource="{RelativeSource AncestorType={x:Type local:WizardProgressBar}}"
-                                                                     Path="Progress"/>
-                                                        </MultiBinding>
-                                                    </Ellipse.Visibility>
-                                                </Ellipse>
-                                                <Path Name="leftFillPath"
-                                                      Grid.Column="0"
-                                                      Style="{StaticResource innerPath}">
-                                                    <Path.Visibility>
-                                                        <MultiBinding Converter="{StaticResource IsProgressedConverter}"
-                                                                      ConverterParameter="False">
-                                                            <Binding RelativeSource="{RelativeSource TemplatedParent}"/>
-                                                            <Binding RelativeSource="{RelativeSource AncestorType={x:Type local:WizardProgressBar}}"
-                                                                     Path="Progress"/>
-                                                        </MultiBinding>
-                                                    </Path.Visibility>
-                                                </Path>
-                                                <Path Name="rightFillPath" Grid.Column="1"
-                                                      Style="{StaticResource innerPath}">
-                                                    <Path.Visibility>
-                                                        <MultiBinding Converter="{StaticResource IsProgressedConverter}"
-                                                                      ConverterParameter="True">
-                                                            <Binding RelativeSource="{RelativeSource TemplatedParent}"/>
-                                                            <Binding RelativeSource="{RelativeSource AncestorType={x:Type local:WizardProgressBar}}"
-                                                                     Path="Progress"/>
-                                                        </MultiBinding>
-                                                    </Path.Visibility>
-                                                </Path>
-                                            </Grid>
+
+                                            <Path Grid.Row="0" Name="topPath" Style="{StaticResource OuterPath}"/>
+                                            <Path Grid.Row="1" Name="bottomPath" Style="{StaticResource OuterPath}"/>
+
+                                            <!-- Step Node -->
+                                            <Ellipse Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Center" Stroke="#949494" StrokeThickness="2" Height="26" Width="26" Fill="White"/>
+
+                                            <!-- Progress Node -->
+                                            <Ellipse Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Center" Stroke="Transparent" Height="16" Width="16" Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:WizardProgressBar}}, Path=Foreground}">
+                                                <Ellipse.Visibility>
+                                                    <MultiBinding Converter="{StaticResource IsProgressedConverter}" ConverterParameter="False">
+                                                        <Binding RelativeSource="{RelativeSource TemplatedParent}"/>
+                                                        <Binding RelativeSource="{RelativeSource AncestorType={x:Type local:WizardProgressBar}}" Path="Progress"/>
+                                                    </MultiBinding>
+                                                </Ellipse.Visibility>
+                                            </Ellipse>
+
+                                            <!-- (Top) Path between Progress Node -->
+                                            <Path Name="topFillPath" Grid.Row="0" Style="{StaticResource InnerPath}">
+                                                <Path.Visibility>
+                                                    <MultiBinding Converter="{StaticResource IsProgressedConverter}" ConverterParameter="False">
+                                                        <Binding RelativeSource="{RelativeSource TemplatedParent}"/>
+                                                        <Binding RelativeSource="{RelativeSource AncestorType={x:Type local:WizardProgressBar}}" Path="Progress"/>
+                                                    </MultiBinding>
+                                                </Path.Visibility>
+                                            </Path>
+
+                                            <!-- (Bottom) Path between Progress Node -->
+                                            <Path Name="bottomFillPath" Grid.Row="1" Style="{StaticResource InnerPath}">
+                                                <Path.Visibility>
+                                                    <MultiBinding Converter="{StaticResource IsProgressedConverter}" ConverterParameter="True">
+                                                        <Binding RelativeSource="{RelativeSource TemplatedParent}"/>
+                                                        <Binding RelativeSource="{RelativeSource AncestorType={x:Type local:WizardProgressBar}}" Path="Progress"/>
+                                                    </MultiBinding>
+                                                </Path.Visibility>
+                                            </Path>
                                         </Grid>
+
                                         <DataTemplate.Triggers>
-                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource PreviousData}}"
-                                                         Value="{x:Null}">
-                                                <Setter TargetName="leftPath" Property="Visibility" Value="Collapsed"/>
-                                                <Setter TargetName="leftFillPath" Property="Visibility" Value="Collapsed"/>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource PreviousData}}" Value="{x:Null}">
+                                                <Setter TargetName="topPath" Property="Visibility" Value="Collapsed"/>
+                                                <Setter TargetName="topFillPath" Property="Visibility" Value="Collapsed"/>
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Converter={StaticResource IsLastItemConverter}}"
-                                                         Value="True">
-                                                <Setter TargetName="rightPath" Property="Visibility" Value="Collapsed"/>
-                                                <Setter TargetName="rightFillPath" Property="Visibility" Value="Collapsed"/>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Converter={StaticResource IsLastItemConverter}}" Value="True">
+                                                <Setter TargetName="bottomPath" Property="Visibility" Value="Collapsed"/>
+                                                <Setter TargetName="bottomFillPath" Property="Visibility" Value="Collapsed"/>
                                             </DataTrigger>
                                         </DataTemplate.Triggers>
+
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                            <ItemsControl Grid.Row="1" ItemsSource="{TemplateBinding ItemsSource}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <UniformGrid Rows="1"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
+
+                            <!-- Steps Text -->
+                            <ItemsControl Grid.Column="1" ItemsSource="{TemplateBinding ItemsSource}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                        <UniformGrid Height="52" Columns="1">
+                                            <TextBlock Text="{Binding}" Margin="15,0,0,0" VerticalAlignment="Center"/>
+                                        </UniformGrid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
@@ -150,4 +114,5 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
 </ResourceDictionary>

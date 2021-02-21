@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WizardProgressBarLibrary
 {
@@ -18,30 +7,27 @@ namespace WizardProgressBarLibrary
     {
         #region Dependency Properties
 
-        public static DependencyProperty ProgressProperty =
-            DependencyProperty.Register("Progress",
-                                        typeof(int),
-                                        typeof(WizardProgressBar),
-                                        new FrameworkPropertyMetadata(0, null, CoerceProgress));
+        public static readonly DependencyProperty ProgressProperty = DependencyProperty.Register(
+            "Progress",
+            typeof(int),
+            typeof(WizardProgressBar),
+            new FrameworkPropertyMetadata(0, null, CoerceProgress)
+        );
 
         private static object CoerceProgress(DependencyObject target, object value)
         {
-            WizardProgressBar wizardProgressBar = (WizardProgressBar) target;
-                
-            int progress = (int)value;
+            var wizardProgressBar = (WizardProgressBar) target;
+
+            var progress = (int) value;
             if (progress < 0)
-            {
                 progress = 0;
-            }
             else if (progress > wizardProgressBar.Items.Count)
-            {
                 progress = wizardProgressBar.Items.Count;
-            }
+
             if (wizardProgressBar.Items.Count == 0)
-            {
                 return 0;
-            }
-            return 100* progress / wizardProgressBar.Items.Count;
+
+            return 100 * progress / wizardProgressBar.Items.Count;
         }
 
         #endregion // Dependency Properties
@@ -59,8 +45,8 @@ namespace WizardProgressBarLibrary
 
         public int Progress
         {
-            get { return (int)base.GetValue(ProgressProperty); }
-            set { base.SetValue(ProgressProperty, value); }
+            get => (int) GetValue(ProgressProperty);
+            set => SetValue(ProgressProperty, value);
         }
 
         #endregion // Properties

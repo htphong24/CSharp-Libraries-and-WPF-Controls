@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 
@@ -23,27 +11,25 @@ namespace WizardProgressBarDemo
     {
         public MainWindow()
         {
-            try
+            InitializeComponent();
+
+            Steps = new ObservableCollection<string>
             {
-                InitializeComponent();
-            }
-            catch (Exception ex)
-            {
-                
-                throw;
-            }
-            Steps = new ObservableCollection<string>();
-            Steps.Add("WELCOME");
-            Steps.Add("PROFILE");
-            Steps.Add("CREDENTIALS");
-            Steps.Add("GROUPS");
-            Steps.Add("FINISHED");
-            this.DataContext = this;
+                "WELCOME",
+                "PROFILE",
+                "CREDENTIALS",
+                "GROUPS",
+                "FINISHED"
+            };
+
+            DataContext = this;
         }
+
         private int m_progress;
+
         public int Progress
         {
-            get { return m_progress; }
+            get => m_progress;
             set
             {
                 m_progress = value;
@@ -58,22 +44,26 @@ namespace WizardProgressBarDemo
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         private void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void IncreaseButton_Click(object sender, RoutedEventArgs e)
         {
-            Progress += 1;
+            if (Progress == Steps.Count)
+                return;
+
+            Progress++;
         }
 
         private void DecreaseButton_Click(object sender, RoutedEventArgs e)
         {
-            Progress -= 1;
+            if (Progress == 0)
+                return;
+
+            Progress--;
         }
     }
 }
